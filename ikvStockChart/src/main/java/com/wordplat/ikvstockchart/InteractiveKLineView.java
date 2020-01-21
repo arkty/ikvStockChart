@@ -96,7 +96,7 @@ public class InteractiveKLineView extends View {
         super(context, attrs, defStyleAttr);
 
         viewRect = new RectF();
-        viewPadding = ViewUtils.dpTopx(context, 10);
+        viewPadding = 0;
 
         render = new KLineRender(context);
 
