@@ -49,7 +49,7 @@ public class CandleDrawing implements IDrawing {
     private final RectF kLineRect = new RectF(); // K 线图显示区域
     private AbstractRender render;
 
-    private float candleSpace = 0.1f; // entry 与 entry 之间的间隙，默认 0.1f (10%)
+    private float candleSpace = 0.2f; // entry 与 entry 之间的间隙，默认 0.1f (10%)
     private float extremumToRight;
     private float[] candleLineBuffer = new float[8]; // 计算 2 根线坐标用的
     private float[] candleRectBuffer = new float[4]; // 计算 1 个矩形坐标用的
