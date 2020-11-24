@@ -24,11 +24,11 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
-        if (BuildConfig.APPLICATION_ID.equals(getCurProcessName(this))) {
-            AppRuntimeInitializer.INSTANCE.initRuntime(this);
-        }
+        //if (BuildConfig.APPLICATION_ID.equals(getCurProcessName(this))) {
+        //    AppRuntimeInitializer.INSTANCE.initRuntime(this);
+        //}
 
-        x.Ext.init(this);
+        //x.Ext.init(this);
     }
 
     private String getCurProcessName(Context context) {

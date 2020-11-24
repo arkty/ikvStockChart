@@ -35,7 +35,7 @@ import com.wordplat.ikvstockchart.entry.SizeColor;
 
 public abstract class AbstractRender {
     private static final String TAG = "AbstractRender";
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
 
     protected EntrySet entrySet; // entry 值
 
@@ -51,7 +51,7 @@ public abstract class AbstractRender {
     private final Matrix matrixInvert = new Matrix(); // 用于缓存反转矩阵
 
     private final float[] touchPts = new float[2];
-    private final float[] touchValues = new float[9]; // 存储缩放和平移信息
+    protected final float[] touchValues = new float[9]; // 存储缩放和平移信息
     private final float[] extremumY = new float[2]; // 当前显示区域内的 Y 轴范围
     private float extremumYScale = 1.3f; // Y 轴极值缩放因子
     private float extremumYDelta = 0; // Y 轴极值增量
@@ -84,6 +84,8 @@ public abstract class AbstractRender {
      * @param y 在点(x, y)上缩小
      */
     public abstract void zoomOut(float x, float y);
+
+    public abstract void zoom(float x, float y, float scale);
 
     /**
      * 绘制
@@ -307,15 +309,25 @@ public abstract class AbstractRender {
         matrixTouch.setValues(touchValues);
     }
 
+    public void zoom(float scale) {
+        matrixTouch.getValues(touchValues);
+
+        touchValues[Matrix.MSCALE_X] *= scale;
+        //overScrollOffset = 0;
+
+        matrixTouch.setValues(touchValues);
+        //scroll(0f);
+    }
+
     /**
      * 缩放
      *
-     * @param contentRect 当前显示区域
+     * @param contentRect  当前显示区域
      * @param visibleCount 当前显示区域的 X 轴方向上需要显示多少个 entry 值
-     * @param x 在点(x, y)上缩放
-     * @param y 在点(x, y)上缩放。由于 K 线图只会进行水平滚动，因此 y 值被忽略
+     * @param x            在点(x, y)上缩放
+     * @param y            在点(x, y)上缩放。由于 K 线图只会进行水平滚动，因此 y 值被忽略
      */
-    public void zoom(RectF contentRect, float visibleCount, float x, float y) {
+    public void zoom(RectF contentRect, float visibleCount, float x, float y, float scale) {
         if (x < contentRect.left) {
             x = contentRect.left;
         }
@@ -337,12 +349,14 @@ public abstract class AbstractRender {
         } else {
             minVisibleIndex = (int) Math.abs(touchPts[0] - toMinVisibleIndex);
         }
+        matrixTouch.postScale(scale, 1f);
+        //touchValues[Matrix.MSCALE_X] *= scale;//entrySet.getEntryList().size() / visibleCount;
 
-        touchValues[Matrix.MSCALE_X] = entrySet.getEntryList().size() / visibleCount;
+        //computeScrollRange(contentRect.width(), touchValues[Matrix.MSCALE_X]);
 
         computeScrollRange(contentRect.width(), touchValues[Matrix.MSCALE_X]);
 
-        touchValues[Matrix.MTRANS_X] = getTransX(visibleCount, minVisibleIndex);
+//        touchValues[Matrix.MTRANS_X] = getTransX(visibleCount, minVisibleIndex);
 
         matrixTouch.setValues(touchValues);
 
@@ -369,7 +383,7 @@ public abstract class AbstractRender {
      * 按给定矩阵将 entry 的值映射到屏幕像素上
      *
      * @param matrix 矩阵
-     * @param pts 浮点数序列 [x0, y0, x1, y1, ...]
+     * @param pts    浮点数序列 [x0, y0, x1, y1, ...]
      */
     public void mapPoints(Matrix matrix, float[] pts) {
         if (matrix != null) {
@@ -405,7 +419,7 @@ public abstract class AbstractRender {
      * 将基于屏幕像素的坐标按给定矩阵反转到值
      *
      * @param matrix 矩阵
-     * @param pts 浮点数序列 [x0, y0, x1, y1, ...]
+     * @param pts    浮点数序列 [x0, y0, x1, y1, ...]
      */
     public void invertMapPoints(Matrix matrix, float[] pts) {
         if (matrix != null) {
@@ -427,8 +441,8 @@ public abstract class AbstractRender {
      * 值矩阵运算
      *
      * @param matrix 矩阵 matrix
-     * @param rect 视图 rect
-     * @param minY 较小的 Y 值
+     * @param rect   视图 rect
+     * @param minY   较小的 Y 值
      * @param deltaY Y 轴范围
      */
     protected void postMatrixValue(Matrix matrix, RectF rect, float minY, float deltaY) {
@@ -458,9 +472,9 @@ public abstract class AbstractRender {
     /**
      * 值矩阵运算
      *
-     * @param width 当前显示区域的宽
+     * @param width  当前显示区域的宽
      * @param height 当前显示区域的高
-     * @param minY 显示区域内可见的 entry 的最小值
+     * @param minY   显示区域内可见的 entry 的最小值
      * @param deltaY 显示区域内可见的 entry 最大值与最小值之差
      */
     protected void postMatrixValue(float width, float height, float minY, float deltaY) {
@@ -478,7 +492,7 @@ public abstract class AbstractRender {
     /**
      * 手势滑动缩放矩阵运算
      *
-     * @param width 当前显示区域的宽
+     * @param width        当前显示区域的宽
      * @param visibleCount 当前显示区域的 X 轴方向上需要显示多少个 entry 值
      */
     protected void postMatrixTouch(float width, float visibleCount) {
@@ -545,7 +559,7 @@ public abstract class AbstractRender {
      * 获取给定的 entryIndex 对应的滚动偏移量。在调用 {@link #computeScrollRange} 之后才能调用此方法
      *
      * @param visibleCount 当前显示区域的 X 轴方向上需要显示多少个 entry 值
-     * @param entryIndex entry 索引
+     * @param entryIndex   entry 索引
      */
     protected float getTransX(float visibleCount, int entryIndex) {
         final int entrySetSize = entrySet.getEntryList().size();
@@ -561,7 +575,7 @@ public abstract class AbstractRender {
     /**
      * 计算当前缩放下，X 轴方向的最小滚动值和最大滚动值
      *
-     * @param width 当前显示区域的宽
+     * @param width  当前显示区域的宽
      * @param scaleX X 轴方向的缩放
      */
     protected void computeScrollRange(float width, float scaleX) {

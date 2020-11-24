@@ -50,7 +50,7 @@ import com.wordplat.ikvstockchart.render.KLineRender;
 
 public class InteractiveKLineView extends View {
     private static final String TAG = "InteractiveKLineView";
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
 
     // 与视图大小相关的属性
     private final RectF viewRect;
@@ -220,14 +220,21 @@ public class InteractiveKLineView extends View {
 
     private final ScaleGestureDetector scaleDetector = new ScaleGestureDetector(getContext(), new ScaleGestureDetector.SimpleOnScaleGestureListener() {
         @Override
+        public boolean onScale(ScaleGestureDetector detector) {
+            render.zoom(detector.getFocusX(), detector.getFocusY(), detector.getScaleFactor());
+            invalidate();
+            return true;
+        }
+
+        @Override
         public void onScaleEnd(ScaleGestureDetector detector) {
             float f = detector.getScaleFactor();
 
-            if (f < 1.0f) {
-                render.zoomOut(detector.getFocusX(), detector.getFocusY());
-            } else if (f > 1.0f) {
-                render.zoomIn(detector.getFocusX(), detector.getFocusY());
-            }
+//            if (f < 1.0f) {
+//                render.zoomOut(detector.getFocusX(), detector.getFocusY());
+//            } else if (f > 1.0f) {
+//                render.zoomIn(detector.getFocusX(), detector.getFocusY());
+//            }
         }
     });
 
@@ -332,7 +339,7 @@ public class InteractiveKLineView extends View {
     @Override
     public void computeScroll() {
         if (onVerticalMove) {
-            return ;
+            return;
         }
 
         if (scroller.computeScrollOffset()) {

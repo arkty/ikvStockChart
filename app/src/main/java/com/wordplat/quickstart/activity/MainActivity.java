@@ -32,20 +32,20 @@ public class MainActivity extends BaseActivity {
         textList.setLayoutManager(new LinearLayoutManager(mActivity));
         textList.setAdapter(textAdapter);
 
-        RecyclerViewCornerRadius cornerRadius = new RecyclerViewCornerRadius(textList);
-        cornerRadius.setCornerRadius(AppUtils.dpTopx(mActivity, 10));
+        //RecyclerViewCornerRadius cornerRadius = new RecyclerViewCornerRadius(textList);
+        //cornerRadius.setCornerRadius(AppUtils.dpTopx(mActivity, 10));
 
-        RecyclerViewLinearDivider linearDivider = new RecyclerViewLinearDivider(mActivity, LinearLayoutManager.VERTICAL);
-        linearDivider.setDividerSize(1);
-        linearDivider.setDividerColor(0xff888888);
-        linearDivider.setDividerMargin(AppUtils.dpTopx(mActivity, 10), AppUtils.dpTopx(mActivity, 10));
-        linearDivider.setDividerBackgroundColor(0xffffffff);
-        linearDivider.setShowHeaderDivider(false);
-        linearDivider.setShowFooterDivider(false);
+//        RecyclerViewLinearDivider linearDivider = new RecyclerViewLinearDivider(mActivity, LinearLayoutManager.VERTICAL);
+//        linearDivider.setDividerSize(1);
+//        linearDivider.setDividerColor(0xff888888);
+//        linearDivider.setDividerMargin(AppUtils.dpTopx(mActivity, 10), AppUtils.dpTopx(mActivity, 10));
+//        linearDivider.setDividerBackgroundColor(0xffffffff);
+//        linearDivider.setShowHeaderDivider(false);
+//        linearDivider.setShowFooterDivider(false);
 
         // 圆角背景必须第一个添加
-        textList.addItemDecoration(cornerRadius);
-        textList.addItemDecoration(linearDivider);
+        //textList.addItemDecoration(cornerRadius);
+        //textList.addItemDecoration(linearDivider);
 
         for (int i = 0 ; i < 16 ; i++) {
             String result = Integer.toHexString(255 - i * 12);

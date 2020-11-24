@@ -120,30 +120,28 @@ public class KLineGridAxisDrawing implements IDrawing {
         canvas.clipRect(kLineRect.left, kLineRect.top, kLineRect.right, kLineRect.bottom + sizeColor.getXLabelViewHeight());
 
         // 每隔特定个 entry，绘制一条竖向网格线和 X 轴 label
-        final int count = render.getZoomTimes() < 0 ? Math.abs(7 * render.getZoomTimes()) + 2 : 7;
+        //final int count = render.getZoomTimes() < 0 ? Math.abs(7 * render.getZoomTimes()) + 2 : 7;
         final int lastIndex = entrySet.getEntryList().size() - 1;
         for (int i = minIndex; i < maxIndex; i++) {
             // 跳过首个 entry 和最后一个 entry，因为画出来不好看
             if (i == 0 || i == lastIndex) {
                 continue;
             }
-            if (i % count == 0) {
-                pointCache[0] = i + 0.5f;
-                render.mapPoints(pointCache);
+            pointCache[0] = i + 0.5f;
+            render.mapPoints(pointCache);
 
-                canvas.drawText(
-                        entrySet.getEntryList().get(i).getXLabel(),
-                        pointCache[0],
-                        kLineRect.bottom + render.getSizeColor().getXLabelSize(),
-                        xLabelPaint);
+            canvas.drawText(
+                    entrySet.getEntryList().get(i).getXLabel(),
+                    pointCache[0],
+                    kLineRect.bottom + render.getSizeColor().getXLabelSize(),
+                    xLabelPaint);
 
-                // 跳过超出显示区域的线
-                if (pointCache[0] < kLineRect.left || pointCache[0] > kLineRect.right) {
-                    continue;
-                }
-
-                canvas.drawLine(pointCache[0], kLineRect.top, pointCache[0], kLineRect.bottom, gridPaint);
+            // 跳过超出显示区域的线
+            if (pointCache[0] < kLineRect.left || pointCache[0] > kLineRect.right) {
+                continue;
             }
+
+            canvas.drawLine(pointCache[0], kLineRect.top, pointCache[0], kLineRect.bottom, gridPaint);
         }
         canvas.restore();
     }
