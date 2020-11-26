@@ -328,6 +328,7 @@ public abstract class AbstractRender {
      * @param y            在点(x, y)上缩放。由于 K 线图只会进行水平滚动，因此 y 值被忽略
      */
     public void zoom(RectF contentRect, float visibleCount, float x, float y, float scale) {
+
         if (x < contentRect.left) {
             x = contentRect.left;
         }
@@ -336,7 +337,10 @@ public abstract class AbstractRender {
         }
 
         matrixTouch.getValues(touchValues);
-
+        // min scale
+        if (touchValues[Matrix.MSCALE_X] < 8f && scale < 1f) {
+            return;
+        }
         final int minVisibleIndex;
         final int toMinVisibleIndex = (int) (visibleCount * (x - contentRect.left) / contentRect.width());
 
@@ -358,7 +362,7 @@ public abstract class AbstractRender {
 
 //        touchValues[Matrix.MTRANS_X] = getTransX(visibleCount, minVisibleIndex);
 
-        matrixTouch.setValues(touchValues);
+        //matrixTouch.setValues(touchValues);
 
         if (DEBUG) {
             Log.i(TAG, "##d zoom: touchValues[Matrix.MSCALE_X] = " + touchValues[Matrix.MSCALE_X]
@@ -525,7 +529,6 @@ public abstract class AbstractRender {
                     matrixTouch.postTranslate(touchValues[Matrix.MTRANS_X], 0);
 
                 } else {
-                    // TODO 左滑、右滑加载中时转动屏幕方向，定位仍然有 BUG，我将花更多时间找到好的办法解决
                     // 转动屏幕方向导致矩形变化，定位到之前相同比例的滚动位置
                     touchValues[Matrix.MTRANS_X] = touchValues[Matrix.MTRANS_X] / lastMaxScrollOffset * maxScrollOffset;
 

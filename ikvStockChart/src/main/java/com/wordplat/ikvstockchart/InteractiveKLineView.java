@@ -21,7 +21,6 @@ package com.wordplat.ikvstockchart;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.RectF;
-import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ScrollerCompat;
 import android.util.AttributeSet;
@@ -32,15 +31,15 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.animation.Interpolator;
+import android.widget.OverScroller;
 
+import com.wordplat.ikvstockchart.compat.GestureMoveActionCompat;
 import com.wordplat.ikvstockchart.compat.ViewUtils;
 import com.wordplat.ikvstockchart.entry.Entry;
 import com.wordplat.ikvstockchart.entry.EntrySet;
 import com.wordplat.ikvstockchart.entry.StockDataTest;
-import com.wordplat.ikvstockchart.compat.GestureMoveActionCompat;
 import com.wordplat.ikvstockchart.render.AbstractRender;
 import com.wordplat.ikvstockchart.render.KLineRender;
-
 /**
  * <p>交互式 K 线图</p>
  * <p>Date: 2017/3/10</p>
@@ -221,6 +220,7 @@ public class InteractiveKLineView extends View {
     private final ScaleGestureDetector scaleDetector = new ScaleGestureDetector(getContext(), new ScaleGestureDetector.SimpleOnScaleGestureListener() {
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
+            Log.v("ScaleFix", "onScale: " + detector.getScaleFactor());
             render.zoom(detector.getFocusX(), detector.getFocusY(), detector.getScaleFactor());
             invalidate();
             return true;
@@ -467,7 +467,7 @@ public class InteractiveKLineView extends View {
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
         boolean onHorizontalMove = gestureCompat.onTouchEvent(event, event.getX(), event.getY());
-        final int action = MotionEventCompat.getActionMasked(event);
+        final int action = event.getAction();
 
         onVerticalMove = false;
 
@@ -485,10 +485,12 @@ public class InteractiveKLineView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent e) {
-        final int action = MotionEventCompat.getActionMasked(e);
-
-        gestureDetector.onTouchEvent(e);
-        scaleDetector.onTouchEvent(e);
+        final int action = e.getAction();
+        if (e.getPointerCount() > 1) {
+            scaleDetector.onTouchEvent(e);
+        } else {
+            gestureDetector.onTouchEvent(e);
+        }
 
         switch (action) {
             case MotionEvent.ACTION_DOWN: {
@@ -528,6 +530,10 @@ public class InteractiveKLineView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        render.render(canvas);
+        try {
+            render.render(canvas);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
