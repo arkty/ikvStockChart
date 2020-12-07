@@ -319,6 +319,10 @@ public abstract class AbstractRender {
         //scroll(0f);
     }
 
+    public float getScale() {
+        return touchValues[Matrix.MSCALE_X];
+    }
+
     /**
      * 缩放
      *
@@ -339,6 +343,10 @@ public abstract class AbstractRender {
         matrixTouch.getValues(touchValues);
         // min scale
         if (touchValues[Matrix.MSCALE_X] < 8f && scale < 1f) {
+            return;
+        }
+        // max scale
+        if (touchValues[Matrix.MSCALE_X] > 70f && scale > 1f) {
             return;
         }
         final int minVisibleIndex;

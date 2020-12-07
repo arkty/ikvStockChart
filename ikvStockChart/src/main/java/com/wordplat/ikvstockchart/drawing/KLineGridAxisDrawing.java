@@ -21,6 +21,7 @@ package com.wordplat.ikvstockchart.drawing;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.util.Log;
 
 import com.wordplat.ikvstockchart.align.YLabelAlign;
 import com.wordplat.ikvstockchart.entry.EntrySet;
@@ -111,7 +112,7 @@ public class KLineGridAxisDrawing implements IDrawing {
         canvas.drawRect(kLineRect, axisPaint);
 
         // 绘制 三条横向网格线
-        for (int i = 0 ; i < 3 ; i++) {
+        for (int i = 0; i < 3; i++) {
             float lineTop = kLineRect.top + (i + 1) * lineHeight;
             canvas.drawLine(kLineRect.left, lineTop, kLineRect.right, lineTop, gridPaint);
         }
@@ -122,9 +123,15 @@ public class KLineGridAxisDrawing implements IDrawing {
         // 每隔特定个 entry，绘制一条竖向网格线和 X 轴 label
         //final int count = render.getZoomTimes() < 0 ? Math.abs(7 * render.getZoomTimes()) + 2 : 7;
         final int lastIndex = entrySet.getEntryList().size() - 1;
+        final float scale = render.getScale();
+        //Log.v("KLineAxis", "scale = " + scale);// from 8 to 70
+        //Log.v("KLineAxis", "min_max = " + minIndex + ", " + maxIndex);// from 10 to 70
+        final int itemsCount = maxIndex - minIndex;
+        final float delta = Math.round(itemsCount / scale * 2);
+
         for (int i = minIndex; i < maxIndex; i++) {
             // 跳过首个 entry 和最后一个 entry，因为画出来不好看
-            if (i == 0 || i == lastIndex) {
+            if (i == 0 || i == lastIndex || i % delta != 0) {
                 continue;
             }
             pointCache[0] = i + 0.5f;
@@ -149,7 +156,7 @@ public class KLineGridAxisDrawing implements IDrawing {
     @Override
     public void onDrawOver(Canvas canvas) {
         // 绘制 Y 轴 label
-        for (int i = 0 ; i < 5 ; i++) {
+        for (int i = 0; i < 5; i++) {
             float lineTop = kLineRect.top + i * lineHeight;
             pointCache[1] = lineTop;
             render.invertMapPoints(pointCache);
