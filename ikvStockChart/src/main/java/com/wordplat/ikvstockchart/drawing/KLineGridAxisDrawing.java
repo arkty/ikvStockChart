@@ -45,7 +45,7 @@ public class KLineGridAxisDrawing implements IDrawing {
     private Paint axisPaint; // X 轴和 Y 轴的画笔
     private Paint gridPaint; // k线图网格线画笔
     private final Paint.FontMetrics fontMetrics = new Paint.FontMetrics(); // 用于 labelPaint 计算文字位置
-    private final DecimalFormat decimalFormatter = new DecimalFormat("#,##0.00");
+    private final DecimalFormat decimalFormatter = new DecimalFormat("#,##0");
 
     private final RectF kLineRect = new RectF(); // K 线图显示区域
     private KLineRender render;
@@ -168,7 +168,8 @@ public class KLineGridAxisDrawing implements IDrawing {
             float lineTop = kLineRect.top + i * lineHeight;
             pointCache[1] = lineTop;
             render.invertMapPoints(pointCache);
-            String value = Math.round(Math.round(pointCache[1] / scale) * scale) + "";
+            int intValue = Math.round(Math.round(pointCache[1] / scale) * scale);
+            String value = decimalFormatter.format(intValue);
 
             if (i == 0) {
                 pointCache[0] = lineTop - fontMetrics.top;
