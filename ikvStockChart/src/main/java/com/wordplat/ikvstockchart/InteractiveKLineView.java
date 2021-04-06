@@ -31,8 +31,8 @@ import android.view.ViewConfiguration;
 import android.view.animation.Interpolator;
 import android.widget.OverScroller;
 
-import androidx.core.view.ViewCompat;
-import androidx.core.widget.ScrollerCompat;
+import android.support.v4.view.ViewCompat;
+import android.support.v4.widget.ScrollerCompat;
 
 import com.wordplat.ikvstockchart.compat.GestureMoveActionCompat;
 import com.wordplat.ikvstockchart.compat.ViewUtils;

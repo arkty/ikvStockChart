@@ -162,7 +162,7 @@ public class KLineGridAxisDrawing implements IDrawing {
         };
         render.invertMapPoints(pts);
         float diff = (pts[1] - pts[3]);
-        float scale = (Math.round((int)Math.log10(diff))) * 10f;
+        float scale = (float) Math.pow(10, Math.round((int)Math.log10(diff)));
 
         for (int i = 0; i < 5; i++) {
             float lineTop = kLineRect.top + i * lineHeight;
