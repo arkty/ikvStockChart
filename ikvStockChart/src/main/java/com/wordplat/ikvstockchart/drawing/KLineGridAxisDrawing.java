@@ -156,11 +156,19 @@ public class KLineGridAxisDrawing implements IDrawing {
     @Override
     public void onDrawOver(Canvas canvas) {
         // 绘制 Y 轴 label
+        float[] pts = new float[]{
+                kLineRect.right, kLineRect.top,
+                kLineRect.right, kLineRect.bottom,
+        };
+        render.invertMapPoints(pts);
+        float diff = (pts[1] - pts[3]);
+        float scale = (Math.round((int)Math.log10(diff))) * 10f;
+
         for (int i = 0; i < 5; i++) {
             float lineTop = kLineRect.top + i * lineHeight;
             pointCache[1] = lineTop;
             render.invertMapPoints(pointCache);
-            String value = decimalFormatter.format(pointCache[1]);
+            String value = Math.round(Math.round(pointCache[1] / scale) * scale) + "";
 
             if (i == 0) {
                 pointCache[0] = lineTop - fontMetrics.top;
