@@ -21,8 +21,6 @@ package com.wordplat.ikvstockchart;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.RectF;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.widget.ScrollerCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -32,6 +30,9 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.animation.Interpolator;
 import android.widget.OverScroller;
+
+import androidx.core.view.ViewCompat;
+import androidx.core.widget.ScrollerCompat;
 
 import com.wordplat.ikvstockchart.compat.GestureMoveActionCompat;
 import com.wordplat.ikvstockchart.compat.ViewUtils;
