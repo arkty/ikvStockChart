@@ -109,6 +109,7 @@ public class KLineRender extends AbstractRender {
     private final CandleDrawing candleDrawing = new CandleDrawing();
     private final MADrawing maDrawing = new MADrawing();
     private final EmptyDataDrawing emptyDataDrawing = new EmptyDataDrawing();
+    //private final HighlightDrawing highlightDrawing = new HighlightDrawing();
 
     private final List<StockIndex> stockIndexList = new ArrayList<>(); // 股票指标列表
 
@@ -119,6 +120,7 @@ public class KLineRender extends AbstractRender {
         kLineDrawingList.add(candleDrawing);
         kLineDrawingList.add(maDrawing);
         kLineDrawingList.add(emptyDataDrawing);
+        //kLineDrawingList.add(highlightDrawing);
 
         zoomAnimator.setDuration(ZOOM_DURATION);
         zoomAnimator.setInterpolator(new LinearInterpolator());
@@ -162,6 +164,10 @@ public class KLineRender extends AbstractRender {
 
     public RectF getKLineRect() {
         return kLineRect;
+    }
+
+    public void addMarkerView(IMarkerView markerView) {
+        //
     }
 
     @Override
